@@ -1,0 +1,58 @@
+image: node:latest
+
+stages:
+  - build
+  - verify
+  - pages
+    
+build:
+  stage: build
+  only:
+    - main
+    - dev
+    - merge_requests
+  script:
+    - echo "Building project"
+    - npm ci
+
+lint:
+  stage: verify
+  only:
+    - main
+    - dev
+    - merge_requests
+  script:
+    - echo "Checking formatting"
+    - npm ci
+    - npx vue-cli-service lint --no-fix
+
+integration-test:
+  stage: verify
+  only:
+    - main
+    - dev
+    - merge_requests
+  script:
+    - echo "Running Cypress Integration Tests"
+    - apt-get update
+    - apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+    - npm ci
+    - npm run serve &
+    - npx cypress run
+    - npx nyc report --reporter=text-summary
+  artifacts:
+    when: always
+    paths:
+      - coverage
+
+pages:
+  stage: pages
+  script:
+    - rm -rf public/cypress
+    - mkdir public/cypress
+    - cp -r coverage/lcov-report/* public/cypress/
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

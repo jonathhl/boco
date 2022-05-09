@@ -1,0 +1,13 @@
+spring:
+  profiles.active: @spring.profiles.active@
+  data.rest.detection-strategy: annotated
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: update
+  datasource:
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  h2.console:
+    enabled: true
+    path: /h2

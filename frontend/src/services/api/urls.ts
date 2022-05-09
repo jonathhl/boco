@@ -1,0 +1,10 @@
+//Urls
+export const API_URL = "http://localhost:8888"
+export const AUTH_URL = API_URL + "/auth"
+export const USER_URL = API_URL + "/user"
+export const IMAGE_URL = API_URL + "/image"
+export const LISTING_URL = API_URL + "/listing"
+export const REQUEST_URL = API_URL + "/request"
+export const RATING_URL = API_URL + "/rating"
+export const CHAT_URL = API_URL + "/chat"
+export const NOTIFICATION_URL = API_URL + "/notification"

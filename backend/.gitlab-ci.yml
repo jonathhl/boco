@@ -1,0 +1,57 @@
+image: maven:latest
+
+stages:
+  - build
+  - verify
+  - pages
+
+cache:
+  paths:
+    - /root/.m2/repository/
+
+build:
+  stage: build
+  only:
+    - main
+    - dev
+    - merge_requests
+  script:
+    - echo "Building project"
+    - mvn clean compile
+
+lint:
+  stage: verify
+  only:
+    - main
+    - dev
+    - merge_requests
+  script:
+    - echo "Checking formatting"
+    - mvn clean formatter:validate
+
+test:
+  stage: verify
+  only:
+    - main
+    - dev
+    - merge_requests
+  script:
+    - echo "Running tests"
+    - mvn clean test
+    - echo "Building Jacoco report"
+    - mvn jacoco:report
+  artifacts:
+    paths:
+      - public/jacoco
+
+pages:
+  stage: pages
+  script:
+    - echo "Building Javadoc"
+    - mvn javadoc:javadoc
+  artifacts:
+    paths:
+      - public/javadoc
+      - public/jacoco
+  only:
+    - main
